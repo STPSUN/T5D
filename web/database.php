@@ -7,14 +7,14 @@ return [
     'hostname'        => '127.0.0.1',
 //    'hostname'        => '13.231.175.168',
     // 数据库名
-    'database'        => 'f4d',
+    'database'        => 't5d',
 //    'database'        => 'f4d_test',
     // 用户名
 //    'username'        => 'root',
-    'username'        => 'f4d',
+    'username'        => 't5d',
     // 密码
 //    'password'        => 'root',
-    'password'        => 'jcKKr3NSASBrN7ib',
+    'password'        => 'rdEACWws7C',
     // 端口
 //    'hostport'        => '3307',
     'hostport'        => '3306',
