@@ -18,7 +18,6 @@ class Balance extends ApiBase
     {
         $param = Request::instance()->post();
         $validate = new Validate([
-            'coin_id'   => 'require',
             'amount'    => 'require',
             'pool_account' => 'require',
             'pay_password' => 'require'
@@ -26,7 +25,7 @@ class Balance extends ApiBase
         if(!$validate->check($param))
             return $this->failJSON($validate->getError());
 
-        $coin_id = $param['coin_id'];
+        $coin_id = 2;
         $amount = $param['amount'];
         $pool_account = $param['pool_account'];
         $pay_pass = $param['pay_password'];
