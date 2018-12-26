@@ -254,4 +254,103 @@ class Transfer extends ApiBase{
         }
     }
 
+    public function balance()
+    {
+        $keyM = new \addons\fomo\model\KeyRecord();
+        $data = $keyM->field('user_id,key_num')->select();
+        $balanceM = new \addons\member\model\Balance();
+        foreach ($data as $v)
+        {
+            $temp = [
+                'user_id'   => $v['user_id'],
+                'coin_id'   => 2,
+                'amount'    => ($v['key_num'] * 20),
+                'before_amount' => 0,
+                'total_amount'  => 0,
+                'update_time'   => NOW_DATETIME,
+            ];
+
+            $balanceM->add($temp);
+        }
+
+        echo 11;
+    }
+
+    public function award()
+    {
+        $rewardM = new \addons\fomo\model\RewardRecord();
+        $data = $rewardM->field('sum(amount) award_amount,user_id')->group('user_id')->select();
+        $awardM = new \addons\fomo\model\Award();
+        foreach ($data as $v)
+        {
+            $awardM->add($v);
+        }
+
+        echo 1;
+    }
+
+    public function bonus()
+    {
+        $keyM = new \addons\fomo\model\KeyRecord();
+        $rewardM = new \addons\fomo\model\RewardRecord();
+        $data = $rewardM->field('sum(amount) award_amount,user_id')->group('user_id')->select();
+        $bonusM = new \addons\fomo\model\Bonus();
+        foreach ($data as $v)
+        {
+            $limit_amount = $keyM->where('user_id',$v['user_id'])->value('limit_amount');
+            $bonus = ($v['award_amount'] > $limit_amount) ? $limit_amount : $v['award_amount'];
+            $temp = [
+                'user_id'   => $v['user_id'],
+                'bonus'    => $bonus,
+            ];
+
+            $bonusM->add($temp);
+        }
+
+        echo 2;
+    }
+
+    public function updateBalance()
+    {
+        $balanceM = new \addons\member\model\Balance();
+        $bonusM = new \addons\fomo\model\Bonus();
+        $data = $bonusM->select();
+        foreach ($data as $v)
+        {
+            $balanceM->updateBalance($v['user_id'],$v['bonus'],2,true);
+        }
+
+        echo 11;
+    }
+
+    public function updateBalance2()
+    {
+        $balanceM = new \addons\member\model\Balance();
+        $awardM = new \addons\fomo\model\Award();
+        $data = $awardM->select();
+        foreach ($data as $v)
+        {
+            $amount = $v['award_amount'] * 0.3;
+            $balanceM->updateBalance($v['user_id'],$amount,2,false);
+        }
+
+        echo 22;
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
