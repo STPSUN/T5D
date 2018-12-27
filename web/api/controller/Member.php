@@ -813,9 +813,15 @@ class Member extends \web\api\controller\ApiBase
         $amount = $this->_post('amount');
         $user_id = $this->user_id;
 
-        if (!$user_id || !$coin_id|| !$amount) {
-            return $this->failJSON("illegal request");
-        }
+        $param = Request::instance()->post();
+        $validate = new Validate([
+            'coin_id'   => 'require',
+            'amount'    => ['require','regex' => '^[1-9]*$']
+        ],[
+            'amount'    => '请输入正确的数量'
+        ]);
+        if(!$validate->check($param))
+            return $this->failJSON($validate->getError());
 
         $sysM = new \web\common\model\sys\SysParameterModel();
         $balanceM = new \addons\member\model\Balance();
