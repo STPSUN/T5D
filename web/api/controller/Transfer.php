@@ -188,7 +188,7 @@ class Transfer extends ApiBase{
                 return $this->failJSON('该币种不存在');
 
             if(!$amount || $amount <= 0){
-                return $this->failJSON('请输入有效转账数量');
+                return $this->failJSON('请输入有效提现数量');
             }
             $m = new \addons\member\model\MemberAccountModel();
             $user = $m->getDetail($user_id);
@@ -222,12 +222,25 @@ class Transfer extends ApiBase{
                     $AssetModel->rollback();
                     return $this->failJSON('账户余额不足');
                 }
+
+                $withdraw_limit = $sysM->getValByName('withdraw_limit');
+                $tradeM = new \addons\eth\model\EthTradingOrder();
+                $where_trade = [
+                    'user_id'   => $user_id,
+                    'coin_id'   => $coin_id,
+                    'type'      => 0,
+                    'status'    => array('in','0,3'),
+                ];
+                $eth_num = $tradeM->where($where_trade)->whereTime('update_time','today')->sum('amount');
+                $eth_num += $amount;
+                if($eth_num > $withdraw_limit)
+                    return $this->failJSON('已达到今日提现上限');
+
                 $userAsset = $AssetModel->updateBalance($user_id,$total_amount,$coin_id);
                 if(!$userAsset){
                     $AssetModel->rollback();
                     return $this->failJSON('账号扣款失败');
                 }
-                $tradeM = new \addons\eth\model\EthTradingOrder();
                 $trade_res = $tradeM->transactionIn($user_id, '',$to_address, $coin_id, $amount,'', '', $server_rate,0, 0,  "可用WNCT转出外网");
                 if(!$trade_res){
                     $AssetModel->rollback();

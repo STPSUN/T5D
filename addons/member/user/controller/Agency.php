@@ -23,22 +23,22 @@ class Agency extends \web\user\controller\AddonUserBase
 
     public function loadList(){
 //        $keyword = $this->_get('keyword');
-        $status = $this->_get('status');
-        $type = $this->_get('type');
-        $filter = 'status='.$status;
-        if($type != ''){
-            $filter .= ' and type='.$type;
-        }
+    $status = $this->_get('status');
+    $type = $this->_get('type');
+    $filter = 'status='.$status;
+    if($type != ''){
+        $filter .= ' and type='.$type;
+    }
 //        if ($keyword != null) {
 //            $filter .= ' and b.username like \'%' . $keyword . '%\'';
 //        }
 //        $m = new \addons\eth\model\EthTradingOrder();
-        $m = new \addons\member\model\Agency();
-        $total = $m->getTotal($filter);
-        $rows = $m->getList($this->getPageIndex(), $this->getPageSize(), $filter);
-        $count_total = $m->getCountTotal($filter);
-        return $this->toTotalDataGrid($total, $rows,$count_total);
-    }
+    $m = new \addons\member\model\Agency();
+    $total = $m->getTotal($filter);
+    $rows = $m->getList($this->getPageIndex(), $this->getPageSize(), $filter);
+    $count_total = $m->getCountTotal($filter);
+    return $this->toTotalDataGrid($total, $rows,$count_total);
+}
 
     public function edit() {
         if(IS_POST) {
