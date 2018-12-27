@@ -37,6 +37,10 @@ class Pool extends \web\user\controller\AddonUserBase
         $m = new \addons\member\model\MemberOrePool();
         $total = $m->getTotal($filter);
         $rows = $m->getList($this->getPageIndex(), $this->getPageSize(), $filter);
+        foreach ($rows as &$v)
+        {
+            $v['amount'] += $v['tax'];
+        }
         $count_total = $m->getCountTotal($filter);
         return $this->toTotalDataGrid($total, $rows,$count_total);
     }
