@@ -153,7 +153,12 @@ class Member extends \web\user\controller\AddonUserBase{
                     $balance['total_amount'] = $balance['total_amount'] + $amount;
                     $balance['before_amount'] = $before_amount;
                     $balance['update_time'] = NOW_DATETIME;
-                    $m->save($balance);
+                    $is_save = $m->save($balance);
+                    if(!$is_save)
+                    {
+                        $m->rollback();
+                        return $this->failData('拨币失败');
+                    }
 
                 }else{
                     $balance['user_id'] = $user_id;
