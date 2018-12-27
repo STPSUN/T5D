@@ -592,6 +592,20 @@ class Keygame extends \web\api\controller\ApiBase {
         if ($token_amount < 1)
             return;
 
+        //判断是否达到上限
+        $tokenConfM = new \addons\fomo\model\TokenConf();
+        $tokenRecordM = new \addons\fomo\model\TokenRecord();
+        $token_limit = $tokenConfM->getValByName('total_token_amount');
+        $token_num = $tokenRecordM->getTotalToken(); //释放总量
+        if($token_num >= $token_limit)
+            return;
+
+        $total_token = $token_num + $token_amount;
+        if($total_token > $token_limit)
+        {
+            $token_amount = $token_limit - $token_num;
+        }
+
         $mod_amount = bcmod($amount, $get_token_amount);
         $tokenRecordM = new TokenRecord();
         $user_token = $tokenRecordM->where('user_id', $user_id)->find();
