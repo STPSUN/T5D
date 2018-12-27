@@ -51,10 +51,12 @@ class Member extends \web\api\controller\ApiBase
             $token = $tokenM->getDataByUserID($user_id);
             $data['token_num'] = (empty($token['token']))?0:$token['token'];
 
+            $coinM = new \addons\config\model\Coins();
             $btc_balance = $balanceM->getBalanceByCoinID($user_id,3);
             $data['btc_num'] = $btc_balance ? $btc_balance['amount'] : 0;
 
-            $usdt_balance = $balanceM->getBalanceByCoinID($user_id,4);
+            $usdt_coin_id = $coinM->where('coin_name','USDT')->value('id');
+            $usdt_balance = $balanceM->getBalanceByCoinID($user_id,$usdt_coin_id);
             $data['usdt_num'] = $usdt_balance ? $usdt_balance['amount'] : 0;
 
             $world_balance = $balanceM->getBalanceByCoinID($user_id,2);
