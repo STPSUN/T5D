@@ -2,6 +2,9 @@
 
 namespace addons\member\user\controller;
 
+use think\Request;
+use think\Validate;
+
 class Member extends \web\user\controller\AddonUserBase{
     
     public function index(){
@@ -260,6 +263,16 @@ class Member extends \web\user\controller\AddonUserBase{
         if(IS_POST){
             $user_id = $this->_post('id');
             $amount = $this->_post('amount');
+
+            $param = Request::instance()->post();
+            $validate = new Validate([
+                'amount'    => ['require','regex' => '^[1-9]*$']
+            ],[
+                'amount'    => '请输入正确的数量'
+            ]);
+            if(!$validate->check($param))
+                return $this->failData($validate->getError());
+
             $memberM = new \addons\member\model\MemberAccountModel();
             $user = $memberM->getDetail($user_id);
             if(empty($user))
@@ -275,8 +288,18 @@ class Member extends \web\user\controller\AddonUserBase{
             if($total_token > $token_limit)
                 return $this->failData('已达到token上限');
 
+            $user_token = $tokenRecordM->where('user_id', $user_id)->find();
+            if (empty($user_token)) {
+                $data = array(
+                    'user_id' => $user_id,
+                    'token' => 0,
+                    'before_token' => 0,
+                    'update_time' => NOW_DATETIME,
+                );
+                $tokenRecordM->add($data);
+            }
             $tokenRecordM->where('user_id', $user_id)->setInc('token', $amount);
-
+            return $this->successData();
         }else{
             $m = new \addons\config\model\Coins();
             $list = $m->getDataList(-1,-1,'','id,coin_name','id asc');

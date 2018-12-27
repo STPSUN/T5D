@@ -41,7 +41,7 @@
                 <!--<th data-options="field:'is_auth',width:120,align:'center', formatter:formatAuth">是否认证</th>-->
                 <th data-options="field:'is_frozen',width:100,align:'center', formatter:formatStatus">是否冻结</th>
                 <th data-options="field:'register_time',width:150, align:'center'">注册时间</th>
-                <th data-options="field:'_oper',width:400,halign:'center',formatter: formatOper">操作</th>
+                <th data-options="field:'_oper',width:450,halign:'center',formatter: formatOper">操作</th>
             </tr>
         </thead>
     </table>
@@ -56,6 +56,7 @@
         html += '<button type="button" onclick="view_balance(' + row['id'] + ')" class="btn btn-xs btn-default edit-btn"><i class="icon wb-eye"></i>查看资产</button>';
         
         html += '<button type="button" onclick="add_coin_stock(' + row['id'] + ')" class="btn btn-xs btn-default edit-btn"><i class="icon wb-edit"></i>拨币</button>';
+        html += '<button type="button" onclick="add_token(' + row['id'] + ')" class="btn btn-xs btn-default edit-btn"><i class="icon wb-edit"></i>拨token</button>';
         html += '<button type="button" onclick="edit(' + row['id'] + ')" class="btn btn-xs btn-default del-btn"><i class="icon wb-close"></i>编辑资料</button>';
         
         if(row['is_frozen'] == 1)
@@ -140,6 +141,13 @@
     function add_coin_stock(id) {
         var url = getURL('add_coin_stock', 'id=' + id);
         openBarWin('拨币', 400, 200, url, function () {
+            reload();
+        }, ['确定','取消']);
+    }
+
+    function add_token(id) {
+        var url = getURL('add_token', 'id=' + id);
+        openBarWin('拨token', 400, 200, url, function () {
             reload();
         }, ['确定','取消']);
     }
