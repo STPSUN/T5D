@@ -251,7 +251,40 @@ class Member extends \web\user\controller\AddonUserBase{
             return $this->failData($ex->getMessage());
         }
     }
-    
+
+    /**
+     * 拨币
+     * @return type
+     */
+    public function add_token(){
+        if(IS_POST){
+            $user_id = $this->_post('id');
+            $amount = $this->_post('amount');
+            $memberM = new \addons\member\model\MemberAccountModel();
+            $user = $memberM->getDetail($user_id);
+            if(empty($user))
+                return $this->failData('用户不存在!');
+
+            //判断是否达到上限
+            $tokenConfM = new \addons\fomo\model\TokenConf();
+            $tokenRecordM = new \addons\fomo\model\TokenRecord();
+            $token_limit = $tokenConfM->getValByName('total_token_amount');
+            $token_num = $tokenRecordM->getTotalToken(); //释放总量
+
+            $total_token = $token_num + $amount;
+            if($total_token > $token_limit)
+                return $this->failData('已达到token上限');
+
+            $tokenRecordM->where('user_id', $user_id)->setInc('token', $amount);
+
+        }else{
+            $m = new \addons\config\model\Coins();
+            $list = $m->getDataList(-1,-1,'','id,coin_name','id asc');
+            $this->assign('coins',$list);
+            $this->assign('id',$this->_get('id'));
+            return $this->fetch();
+        }
+    }
 
 }
 
