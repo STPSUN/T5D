@@ -1072,39 +1072,39 @@ class Keygame extends \web\api\controller\ApiBase {
         return $result['rate'];
     }
 
-    public function getBalance() {
-        $token = $this->_get('token', null);
-        if (!$token) {
-            return $this->failJSON("请先登录");
-        }
-        $this->user_id = intval($this->getGlobalCache($token)); //redis中获取user_id
-        if (empty($this->user_id)) {
-            return $this->failJSON("登录已失效，请重新登录");
-        }
-        $this->getEthOrders($this->user_id);
-        $game_id = $this->_get('game_id');
-        $coin_id = $this->_get('coin_id');
-
-        $keyRecordM = new \addons\fomo\model\KeyRecord();
-        $key_num = $keyRecordM->getTotalByGameID($this->user_id, $game_id); //持有游戏key数量
-        $data['key_num'] = $key_num;
-        $rewardM = new \addons\fomo\model\RewardRecord();
-        $data['invite_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id); //邀请分红
-        $data['other_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id, '0,1,2'); //分红总量 2
-        $gameM = new \addons\fomo\model\Game();
-        $game_status = $gameM->where('id',$game_id)->value('status');
-        if($game_status != 1)
-        {
-            $data['other_reward'] = 0;
-        }
-        $balanceM = new \addons\member\model\Balance();
-        $balance = $balanceM->getBalanceByCoinID($this->user_id, $coin_id); //账户币种余额
-        $data['balance'] = $balance ? $balance['amount'] : 0;
-
-        $rewardM = new \addons\fomo\model\RewardRecord();
-        $data['current_game_total_reward'] = $rewardM->getUserTotal($this->user_id, $coin_id, $game_id); //获取游戏投入总量
-        return $this->successJSON($data);
-    }
+//    public function getBalance() {
+//        $token = $this->_get('token', null);
+//        if (!$token) {
+//            return $this->failJSON("请先登录");
+//        }
+//        $this->user_id = intval($this->getGlobalCache($token)); //redis中获取user_id
+//        if (empty($this->user_id)) {
+//            return $this->failJSON("登录已失效，请重新登录");
+//        }
+//        $this->getEthOrders($this->user_id);
+//        $game_id = $this->_get('game_id');
+//        $coin_id = $this->_get('coin_id');
+//
+//        $keyRecordM = new \addons\fomo\model\KeyRecord();
+//        $key_num = $keyRecordM->getTotalByGameID($this->user_id, $game_id); //持有游戏key数量
+//        $data['key_num'] = $key_num;
+//        $rewardM = new \addons\fomo\model\RewardRecord();
+//        $data['invite_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id); //邀请分红
+//        $data['other_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id, '0,1,2'); //分红总量 2
+//        $gameM = new \addons\fomo\model\Game();
+//        $game_status = $gameM->where('id',$game_id)->value('status');
+//        if($game_status != 1)
+//        {
+//            $data['other_reward'] = 0;
+//        }
+//        $balanceM = new \addons\member\model\Balance();
+//        $balance = $balanceM->getBalanceByCoinID($this->user_id, $coin_id); //账户币种余额
+//        $data['balance'] = $balance ? $balance['amount'] : 0;
+//
+//        $rewardM = new \addons\fomo\model\RewardRecord();
+//        $data['current_game_total_reward'] = $rewardM->getUserTotal($this->user_id, $coin_id, $game_id); //获取游戏投入总量
+//        return $this->successJSON($data);
+//    }
 
     public function getLastOrder() {
         try {
