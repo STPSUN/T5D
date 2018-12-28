@@ -4,17 +4,17 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => '127.0.0.1',
-//    'hostname'        => '13.231.175.168',
+//    'hostname'        => '127.0.0.1',
+    'hostname'        => 'rm-t4n09e14u6vu17533io.mysql.singapore.rds.aliyuncs.com',
     // 数据库名
-    'database'        => 't5d',
-//    'database'        => 'f4d_test',
+//    'database'        => 't5d',
+    'database'        => 'ddorp',
     // 用户名
 //    'username'        => 'root',
-    'username'        => 't5d',
+    'username'        => 'ddopr',
     // 密码
 //    'password'        => 'root',
-    'password'        => 'rdEACWws7C',
+    'password'        => 'gisTxqnxPTuYj5Vm',
     // 端口
 //    'hostport'        => '3307',
     'hostport'        => '3306',
