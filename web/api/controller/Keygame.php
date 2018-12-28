@@ -1090,7 +1090,7 @@ class Keygame extends \web\api\controller\ApiBase {
         $data['key_num'] = $key_num;
         $rewardM = new \addons\fomo\model\RewardRecord();
         $data['invite_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id); //邀请分红
-        $data['other_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id, '0,1,2'); //分红总量 2
+//        $data['other_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id, '0,1,2'); //分红总量 2
         $gameM = new \addons\fomo\model\Game();
         $game_status = $gameM->where('id',$game_id)->value('status');
         if($game_status != 1)

@@ -118,7 +118,7 @@ class Fomobase extends \web\index\controller\AddonIndexBase{
         }
         $rewardM = new \addons\fomo\model\RewardRecord();
         $data['invite_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id);
-        $data['other_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id,'0,1,2'); //1
+//        $data['other_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id,'0,1,2'); //1
         $balanceM = new \addons\member\model\Balance();
         $balance = $balanceM->getBalanceByCoinID($this->user_id, $coin_id);
         $data['balance'] = $balance['amount'];
