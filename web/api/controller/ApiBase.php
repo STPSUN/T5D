@@ -453,7 +453,7 @@ class ApiBase extends \web\common\controller\Controller {
         {
             $update_time = $balance_cache['update_time'];
             $record_time = $rewardM->field('update_time')->where('user_id',$user_id)->order('update_time desc')->find();
-            if(strtotime($record_time['update_time']) <= (strtotime($update_time) + 300))
+            if(strtotime($record_time['update_time']) <= (strtotime($update_time) + 600))
             {
                 return $balance_cache;
             }
@@ -485,7 +485,7 @@ class ApiBase extends \web\common\controller\Controller {
             $where['user_id'] = $user_id;
             $where['type'] = $type;
             $record_time = $rewardM->field('update_time')->where($where)->order('update_time desc')->find();
-            if(strtotime($record_time['update_time']) <= (strtotime($update_time) + 300))
+            if(strtotime($record_time['update_time']) <= (strtotime($update_time) + 600))
                 return $balance_cache;
 
             $data['amount'] = $rewardM->getTotalByType($user_id, $coin_id,6);
