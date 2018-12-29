@@ -7,6 +7,7 @@
  */
 
 namespace addons\fomo\index\controller;
+use think\Cache;
 
 /**
  * Description of FomoBase
@@ -110,20 +111,20 @@ class Fomobase extends \web\index\controller\AddonIndexBase{
         return $total_price * $rate / 100;
     }
     
-    public function getBalance(){
-        $coin_id = $this->_get('coin_id');
-        $game_id = $this->_get('game_id');
-        if($this->user_id <= 0){
-            return $this->failData('未登录');
-        }
-        $rewardM = new \addons\fomo\model\RewardRecord();
-        $data['invite_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id);
-        $data['other_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id,'0,1,2'); //1
-        $balanceM = new \addons\member\model\Balance();
-        $balance = $balanceM->getBalanceByCoinID($this->user_id, $coin_id);
-        $data['balance'] = $balance['amount'];
-        return $this->successData($data);
-    }
+//    public function getBalance(){
+//        $coin_id = $this->_get('coin_id');
+//        $game_id = $this->_get('game_id');
+//        if($this->user_id <= 0){
+//            return $this->failData('未登录');
+//        }
+//        $rewardM = new \addons\fomo\model\RewardRecord();
+//        $data['invite_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id);
+//        $data['other_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id,'0,1,2'); //1
+//        $balanceM = new \addons\member\model\Balance();
+//        $balance = $balanceM->getBalanceByCoinID($this->user_id, $coin_id);
+//        $data['balance'] = $balance['amount'];
+//        return $this->successData($data);
+//    }
     
     /**
      * 提取
@@ -205,7 +206,18 @@ class Fomobase extends \web\index\controller\AddonIndexBase{
             return $this->fetch('public/withdraw');
         }
     }
-    
 
-    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

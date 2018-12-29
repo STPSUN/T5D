@@ -436,4 +436,86 @@ class ApiBase extends \web\common\controller\Controller {
         return $_message;
     }
 
+    protected function getBalanceByCache($coin_id)
+    {
+        $balance_cache = $this->getGlobalCache('balance_user_id');
+        $rewardM = new \addons\fomo\model\RewardRecord();
+        $user_id = $this->user_id;
+        if(empty($balance_cache))
+        {
+            $data['invite_reward'] = $rewardM->getTotalByType($user_id, $coin_id,3);
+            $data['other_reward'] = $rewardM->getTotalByType($user_id, $coin_id,'0,1,2'); //1
+            $data['update_time'] = NOW_DATETIME;
+            $this->setGlobalCache($data,'balance_user_id');
+
+            return $data;
+        }else
+        {
+            $update_time = $balance_cache['update_time'];
+            $record_time = $rewardM->field('update_time')->where('user_id',$user_id)->order('update_time desc')->find();
+            if(strtotime($record_time['update_time']) <= (strtotime($update_time) + 300))
+            {
+                return $balance_cache;
+            }
+
+            $data['invite_reward'] = $rewardM->getTotalByType($user_id, $coin_id,3);
+            $data['other_reward'] = $rewardM->getTotalByType($user_id, $coin_id,'0,1,2'); //1
+            $data['update_time'] = $record_time['update_time'];
+            $this->setGlobalCache($data,'balance_user_id');
+
+            return $data;
+        }
+    }
+
+    protected function getBalanceByCacheAndType($coin_id,$type)
+    {
+        $balance_cache = $this->getGlobalCache('balance_type_user_id');
+        $rewardM = new \addons\fomo\model\RewardRecord();
+        $user_id = $this->user_id;
+        if(empty($balance_cache))
+        {
+            $data['amount'] = $rewardM->getTotalByType($user_id, $coin_id,6);
+            $data['update_time'] = NOW_DATETIME;
+            $this->setGlobalCache($data,'balance_type_user_id');
+
+            return $data;
+        }else
+        {
+            $update_time = $balance_cache['update_time'];
+            $where['user_id'] = $user_id;
+            $where['type'] = $type;
+            $record_time = $rewardM->field('update_time')->where($where)->order('update_time desc')->find();
+            if(strtotime($record_time['update_time']) <= (strtotime($update_time) + 300))
+                return $balance_cache;
+
+            $data['amount'] = $rewardM->getTotalByType($user_id, $coin_id,6);
+            $data['update_time'] = $record_time['update_time'];
+            $this->setGlobalCache($data,'balance_type_user_id');
+
+            return $data;
+        }
+    }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

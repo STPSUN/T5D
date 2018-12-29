@@ -1088,15 +1088,21 @@ class Keygame extends \web\api\controller\ApiBase {
         $keyRecordM = new \addons\fomo\model\KeyRecord();
         $key_num = $keyRecordM->getTotalByGameID($this->user_id, $game_id); //持有游戏key数量
         $data['key_num'] = $key_num;
-        $rewardM = new \addons\fomo\model\RewardRecord();
-        $data['invite_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id); //邀请分红
-        $data['other_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id, '0,1,2'); //分红总量 2
+
+//        $rewardM = new \addons\fomo\model\RewardRecord();
+//        $data['invite_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id); //邀请分红
+//        $data['other_reward'] = $rewardM->getTotalByType($this->user_id, $coin_id, '0,1,2'); //分红总量 2
+        $balance_cache = $this->getBalanceByCache($coin_id);
+//        print_r($balance_cache);exit();
+        $data['invite_reward'] = $balance_cache['invite_reward'];
+        $data['other_reward'] = $balance_cache['other_reward'];
+
         $gameM = new \addons\fomo\model\Game();
         $game_status = $gameM->where('id',$game_id)->value('status');
-        if($game_status != 1)
-        {
-            $data['other_reward'] = 0;
-        }
+//        if($game_status != 1)
+//        {
+//            $data['other_reward'] = 0;
+//        }
         $balanceM = new \addons\member\model\Balance();
         $balance = $balanceM->getBalanceByCoinID($this->user_id, $coin_id); //账户币种余额
         $data['balance'] = $balance ? $balance['amount'] : 0;
