@@ -412,7 +412,7 @@ class ApiBase extends \web\common\controller\Controller {
             mkdir($path, 0777, true);
         }
         if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64, $result)){
-            $ext = array('jpg', 'gif', 'png', 'jpeg');
+            $ext = array('jpg','png', 'jpeg');
             $type = $result[2];
             if(!in_array($type, $ext)){
                 $_message['message'] = '图片格式错误';
